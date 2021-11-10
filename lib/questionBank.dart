@@ -40,8 +40,24 @@ class QuestionBrain {
   }
 
   void nextQuestion() {
-    if (_questionIndex < _questionBank.length) {
+    if (_questionIndex < _questionBank.length - 1) {
       _questionIndex++;
     }
+  }
+
+  int howManyQuestion() {
+    return _questionBank.length;
+  }
+
+  bool isFinished() {
+    if (_questionIndex >= _questionBank.length - 1) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  void reset() {
+    _questionIndex = 0;
   }
 }

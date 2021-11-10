@@ -29,6 +29,74 @@ class QuizApp extends StatefulWidget {
 
 class _QuizAppState extends State<QuizApp> {
   List<Icon> checkQuestion = [];
+  int score = 0;
+
+  void checkAnwser(bool userPickedAnswer) {
+    setState(() {
+      if (quizBrain.isFinished() == true) {
+        if (quizBrain.getAnswer() == userPickedAnswer) {
+          checkQuestion.add(const Icon(
+            Icons.check,
+            color: Colors.green,
+          ));
+        } else {
+          checkQuestion.add(const Icon(
+            Icons.clear,
+            color: Colors.red,
+          ));
+        }
+        showDialog(
+            barrierDismissible: false,
+            context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                title: const Text("Finished"),
+                content: const Text("You have reached the end of the quiz"),
+                actions: [
+                  Text(
+                    "You Scored $score out of",
+                    style: const TextStyle(
+                      fontSize: 16.0,
+                    ),
+                  ),
+                  Text(
+                    quizBrain.howManyQuestion().toString(),
+                    style: const TextStyle(
+                      fontSize: 16.0,
+                    ),
+                  ),
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                      setState(() {
+                        quizBrain.reset();
+                        checkQuestion = [];
+                        score = 0;
+                      });
+                    },
+                    child: const Text("Restart"),
+                  ),
+                ],
+              );
+            });
+      } else {
+        if (quizBrain.getAnswer() == userPickedAnswer) {
+          score++;
+          checkQuestion.add(const Icon(
+            Icons.check,
+            color: Colors.green,
+          ));
+        } else {
+          checkQuestion.add(const Icon(
+            Icons.clear,
+            color: Colors.red,
+          ));
+        }
+        quizBrain.nextQuestion();
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -60,20 +128,7 @@ class _QuizAppState extends State<QuizApp> {
                 padding: const EdgeInsets.all(8.0),
                 child: ElevatedButton(
                   onPressed: () {
-                    if (quizBrain.getAnswer() == true) {
-                      print("right answer");
-                    } else {
-                      print("wrong answer");
-                    }
-                    setState(() {
-                      checkQuestion.add(
-                        const Icon(
-                          Icons.check,
-                          color: Colors.green,
-                        ),
-                      );
-                      quizBrain.nextQuestion();
-                    });
+                    checkAnwser(true);
                   },
                   child: const Text(
                     "True",
@@ -96,20 +151,7 @@ class _QuizAppState extends State<QuizApp> {
                     primary: Colors.red,
                   ),
                   onPressed: () {
-                    if (quizBrain.getAnswer() == false) {
-                      print("right answer");
-                    } else {
-                      print("wrong answer");
-                    }
-                    setState(() {
-                      checkQuestion.add(
-                        const Icon(
-                          Icons.clear,
-                          color: Colors.red,
-                        ),
-                      );
-                      quizBrain.nextQuestion();
-                    });
+                    checkAnwser(false);
                   },
                   child: const Text(
                     "False",
