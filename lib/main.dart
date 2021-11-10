@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:simple_quiz_app/questionBank.dart';
 
 void main() {
   runApp(const MyApp());
 }
+
+QuestionBrain quizBrain = QuestionBrain();
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
@@ -26,25 +29,6 @@ class QuizApp extends StatefulWidget {
 
 class _QuizAppState extends State<QuizApp> {
   List<Icon> checkQuestion = [];
-
-  List<String> questions = [
-    "There are two parts of the body that can't heal themselves",
-    "Howard Donald is the oldest member of Take That",
-    "The Great Wall of China is longer than the distance between London and Beijing",
-    "There are 219 episodes of Friends",
-    "'A' is the most common letter used in the English language",
-  ];
-
-  List<bool> questionAnswers = [
-    false,
-    true,
-    true,
-    false,
-    false,
-  ];
-
-  int questionIndex = 0;
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -60,7 +44,8 @@ class _QuizAppState extends State<QuizApp> {
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Text(
-                    questions[questionIndex],
+                    quizBrain.getQuestion(),
+                    textAlign: TextAlign.center,
                     style: const TextStyle(
                       fontSize: 22.0,
                       fontWeight: FontWeight.bold,
@@ -75,7 +60,7 @@ class _QuizAppState extends State<QuizApp> {
                 padding: const EdgeInsets.all(8.0),
                 child: ElevatedButton(
                   onPressed: () {
-                    if (questionAnswers[questionIndex] == true) {
+                    if (quizBrain.getAnswer() == true) {
                       print("right answer");
                     } else {
                       print("wrong answer");
@@ -87,7 +72,7 @@ class _QuizAppState extends State<QuizApp> {
                           color: Colors.green,
                         ),
                       );
-                      questionIndex++;
+                      quizBrain.nextQuestion();
                     });
                   },
                   child: const Text(
@@ -111,7 +96,7 @@ class _QuizAppState extends State<QuizApp> {
                     primary: Colors.red,
                   ),
                   onPressed: () {
-                    if (questionAnswers[questionIndex] == false) {
+                    if (quizBrain.getAnswer() == false) {
                       print("right answer");
                     } else {
                       print("wrong answer");
@@ -123,7 +108,7 @@ class _QuizAppState extends State<QuizApp> {
                           color: Colors.red,
                         ),
                       );
-                      questionIndex++;
+                      quizBrain.nextQuestion();
                     });
                   },
                   child: const Text(
